@@ -1,0 +1,460 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: fixed;
+    -webkit-tap-highlight-color: transparent; /* Remove blue tap highlight on mobile */
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-blue-50 to-indigo-100;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  #root {
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Changed from hidden to auto for better scrolling */
+  }
+
+  /* Improve default button styles */
+  button {
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Improve focus visibility */
+  :focus-visible {
+    @apply outline-2 outline-blue-500 outline-offset-2;
+  }
+
+  /* Remove default focus for mouse users */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/90 backdrop-blur-sm border border-white/20 shadow-lg;
+  }
+  
+  .btn-primary {
+    @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+           transition-colors duration-200 font-medium disabled:opacity-50 
+           disabled:cursor-not-allowed focus:outline-none focus:ring-2 
+           focus:ring-blue-500 focus:ring-offset-2;
+  }
+
+  /* Custom component for whiteboard */
+  .drawing-canvas {
+    touch-action: none; /* Prevent scrolling while drawing */
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded hover:bg-gray-400 transition-colors;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #9ca3af #f3f4f6;
+}
+
+/* Selection color */
+::selection {
+  @apply bg-blue-200 text-blue-900;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Pulse animation for live indicators */
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 1; 
+  }
+  50% { 
+    opacity: 0.5; 
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Fullscreen styles - FIXED */
+:fullscreen {
+  background: white;
+}
+
+:fullscreen #root {
+  background: white;
+}
+
+:fullscreen .bg-gradient-to-br {
+  background: white !important;
+}
+
+/* Backward compatibility for older browsers */
+:-webkit-full-screen {
+  background: white;
+}
+
+:-moz-full-screen {
+  background: white;
+}
+
+/* Responsive design enhancements */
+
+/* Mobile (<= 640px) */
+@media (max-width: 640px) {
+  /* Prevent iOS zoom on focus */
+  input, 
+  select, 
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Larger touch targets */
+  button,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Tablet (641px - 768px) */
+@media (min-width: 641px) and (max-width: 768px) {
+  /* Tablet-specific styles */
+  html {
+    font-size: 15px;
+  }
+}
+
+/* Desktop (>= 1024px) */
+@media (min-width: 1024px) {
+  /* Better hover effects */
+  .hover-lift {
+    transition: transform 0.2s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Large screens (>= 1536px) */
+@media (min-width: 1536px) {
+  .login-container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Extra large screens (>= 1920px) */
+@media (min-width: 1920px) {
+  html {
+    font-size: 18px;
+  }
+
+  /* Limit max width for ultra-wide screens */
+  .container-ultrawide {
+    max-width: 1920px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Ultra-wide screens (>= 2560px) */
+@media (min-width: 2560px) {
+  #root {
+    max-width: 2560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .glass-card {
+    background: white;
+    border: 2px solid black;
+  }
+
+  button {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Dark mode support (optional - if you add dark mode later) */
+@media (prefers-color-scheme: dark) {
+  /* You can add dark mode styles here when needed */
+  /* .dark-mode {
+    @apply bg-gray-900 text-white;
+  } */
+}
+
+/* Accessibility improvements */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Fix for canvas rendering */
+canvas {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Custom utility classes */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Loading spinner */
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom shadows */
+.shadow-soft {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-medium {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.shadow-hard {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Gradient text */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
+}
+
+/* Ensure images don't overflow */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Better form styling */
+input[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+/* Fix for range input */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-track {
+  @apply bg-gray-200 rounded-full h-2;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  @apply bg-blue-600 rounded-full w-5 h-5 border-2 border-white shadow-lg;
+}
+
+input[type="range"]::-moz-range-track {
+  @apply bg-gray-200 rounded-full h-2;
+}
+
+input[type="range"]::-moz-range-thumb {
+  @apply bg-blue-600 rounded-full w-5 h-5 border-2 border-white shadow-lg;
+  border: none;
+}
+
+/* Prevent content shift when scrollbar appears */
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+/* Improve canvas performance */
+canvas {
+  will-change: transform;
+  contain: content;
+}
+
+/* Better backdrop blur support */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.95);
+  }
+}
+
+
+
+
+
+/* Prevent any scrolling on login page */
+.login-page-container {
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+/* Force content to stay within viewport */
+@media (max-height: 700px) {
+  .login-page-container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  .login-page-container h1 {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .login-page-container .form-input {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+}
+
+/* Very small screens */
+@media (max-height: 600px) {
+  .login-page-container {
+    justify-content: flex-start !important;
+    padding-top: 0.5rem !important;
+  }
+  
+  .login-page-container .optional-section {
+    display: none !important;
+  }
+}
